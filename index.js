@@ -76,7 +76,7 @@ async function run() {
     });
 
     // users collection
-    app.get("/users", async (req, res) => {
+    app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
       const result = await usersCollection.find().toArray();
       res.send(result);
     });
@@ -87,6 +87,8 @@ async function run() {
       res.send(result);
     });
 
+    
+    // make admin porcess
     app.get("/users/admin/:email", verifyJWT, async (req, res) => {
       const email = req.params.email;
       if (req.decoded.email !== email) {
@@ -111,6 +113,7 @@ async function run() {
       res.send(result);
     });
 
+    // make instructor process
     app.get("/users/instructor/:email", verifyJWT, async (req, res) => {
       const email = req.params.email;
       if (req.decoded.email !== email) {
