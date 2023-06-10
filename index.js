@@ -26,10 +26,23 @@ async function run() {
     // await client.connect();
 
     const allDataCollection = client.db("sportsDB").collection("all-data");
+    const usersCollection = client.db("sportsDB").collection("users");
 
     app.get("/alldata", async (req, res) => {
-      const data = await allDataCollection.find({}).toArray();
+      const data = await allDataCollection.find().toArray();
       res.send(data);
+    });
+
+    // users collection
+    app.get("/users", async (req, res) => {
+      const result = await usersCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
