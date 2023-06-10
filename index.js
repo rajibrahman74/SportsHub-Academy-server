@@ -3,7 +3,7 @@ const cors = require("cors");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 require("dotenv").config();
-var jwt = require('jsonwebtoken');
+var jwt = require("jsonwebtoken");
 const port = process.env.PORT || 5000;
 
 // midleware
@@ -49,8 +49,6 @@ async function run() {
     const allDataCollection = client.db("sportsDB").collection("all-data");
     const usersCollection = client.db("sportsDB").collection("users");
 
-
-
     // jwt token process
     app.post("/jwt", (req, res) => {
       const user = req.body;
@@ -65,13 +63,12 @@ async function run() {
       const query = { email: email };
       const user = await usersCollection.findOne(query);
       if (user?.role !== "admin") {
-          return res.status(403).send({ error: true, message: "Forbidden Access" })
+        return res
+          .status(403)
+          .send({ error: true, message: "Forbidden Access" });
       }
-      next()
-  }
-
-
-
+      next();
+    };
 
     app.get("/alldata", async (req, res) => {
       const data = await allDataCollection.find().toArray();
@@ -84,45 +81,59 @@ async function run() {
       res.send(result);
     });
 
-
     app.post("/users", async (req, res) => {
       const user = req.body;
       const result = await usersCollection.insertOne(user);
       res.send(result);
     });
 
-
-
     app.get("/users/admin/:email", verifyJWT, async (req, res) => {
       const email = req.params.email;
       if (req.decoded.email !== email) {
-          res.send({ admin: false })
+        res.send({ admin: false });
       }
 
       const query = { email: email };
       const user = await usersCollection.findOne(query);
-      const result = { admin: user?.role === "admin" }
-      res.send(result)
-  })
+      const result = { admin: user?.role === "admin" };
+      res.send(result);
+    });
 
-
-  app.patch("/users/admin/:id", async (req, res) => {
+    app.patch("/users/admin/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const updateDoc = {
-          $set: {
-              role: "admin",
-          },
+        $set: {
+          role: "admin",
+        },
       };
       const result = await usersCollection.updateOne(filter, updateDoc);
       res.send(result);
-  });
+    });
 
+    app.get("/users/instructor/:email", verifyJWT, async (req, res) => {
+      const email = req.params.email;
+      if (req.decoded.email !== email) {
+        res.send({ admin: false });
+      }
 
+      const query = { email: email };
+      const user = await usersCollection.findOne(query);
+      const result = { instructor: user?.role === "instructor" };
+      res.send(result);
+    });
 
-
-
-
+    app.patch("/users/instructor/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          role: "instructor",
+        },
+      };
+      const result = await usersCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
