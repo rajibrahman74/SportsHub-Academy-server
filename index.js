@@ -184,7 +184,21 @@ async function run() {
       const result = await allDataCollection.updateOne(filter, updateDoc);
       res.send(result);
     });
-    
+
+
+    // class denied patch operation
+    app.patch("/deny/:status", async (req, res) => {
+      const status = req.params.status;
+      console.log(status);
+      const filter = { class_status: status };
+      const updateDoc = {
+        $set: {
+          class_status: "denied",
+        },
+      };
+      const result = await allDataCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
