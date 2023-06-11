@@ -200,6 +200,24 @@ async function run() {
       res.send(result);
     });
 
+    // class feedback patch operation 
+    app.patch("/insertFeedback/:id", async (req, res) => {
+      const id = req.params.id;
+      const feedback = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = {
+          $set: {
+              feedback: feedback,
+          },
+      };
+
+      const result = await allDataCollection.updateOne(filter, updateDoc);
+      res.send(result);
+  });
+
+
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
