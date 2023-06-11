@@ -147,16 +147,22 @@ async function run() {
       res.send(result);
     });
 
-
     // selected class post process
-    app.post("/selectedcclass", async (req, res) => {
+    app.post("/selectedclass", async (req, res) => {
       const selectedClass = req.body;
       const result = await seletcetedClassCollection.insertOne(selectedClass);
       res.send(result);
     });
 
-
     
+    app.get("/selectedclass", async (req, res) => {
+      const email = req.query.email;
+      const query = { userEmail: email };
+      const result = await seletcetedClassCollection.find(query).toArray();
+      res.send(result);
+    });
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
