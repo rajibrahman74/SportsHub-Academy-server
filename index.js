@@ -48,6 +48,9 @@ async function run() {
 
     const allDataCollection = client.db("sportsDB").collection("all-data");
     const usersCollection = client.db("sportsDB").collection("users");
+    const seletcetedClassCollection = client
+      .db("sportsDB")
+      .collection("seletcetedClass");
 
     // jwt token process
     app.post("/jwt", (req, res) => {
@@ -137,8 +140,6 @@ async function run() {
       res.send(result);
     });
 
-
-
     // add classes process for instructor add the new classes
     app.post("/addclasses", async (req, res) => {
       const item = req.body;
@@ -147,7 +148,15 @@ async function run() {
     });
 
 
+    // selected class post process
+    app.post("/selectedcclass", async (req, res) => {
+      const selectedClass = req.body;
+      const result = await seletcetedClassCollection.insertOne(selectedClass);
+      res.send(result);
+    });
 
+
+    
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
