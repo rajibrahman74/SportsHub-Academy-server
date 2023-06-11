@@ -147,12 +147,6 @@ async function run() {
       res.send(result);
     });
 
-    // selected class post process
-    app.post("/selectedclass", async (req, res) => {
-      const selectedClass = req.body;
-      const result = await seletcetedClassCollection.insertOne(selectedClass);
-      res.send(result);
-    });
     // get selected class data
     app.get("/selectedclass", async (req, res) => {
       const email = req.query.email;
@@ -161,6 +155,14 @@ async function run() {
       res.send(result);
     });
 
+    // selected class post process
+    app.post("/selectedclass", async (req, res) => {
+      const selectedClass = req.body;
+      const result = await seletcetedClassCollection.insertOne(selectedClass);
+      res.send(result);
+    });
+
+    // impliment selected class in delete operation
     app.delete("/selectedclass/:id", async (req, res) => {
       const id = req.params.id;
       const result = await seletcetedClassCollection.deleteOne({
@@ -168,6 +170,21 @@ async function run() {
       });
       res.send(result);
     });
+
+    // admin approved patch opeeration
+    app.patch("/alldata/:status", async (req, res) => {
+      const status = req.params.status;
+      console.log(status);
+      const filter = { class_status: status };
+      const updateDoc = {
+        $set: {
+          class_status: "approved",
+        },
+      };
+      const result = await allDataCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
+    
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
