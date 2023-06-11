@@ -153,8 +153,7 @@ async function run() {
       const result = await seletcetedClassCollection.insertOne(selectedClass);
       res.send(result);
     });
-
-    
+    // get selected class data
     app.get("/selectedclass", async (req, res) => {
       const email = req.query.email;
       const query = { userEmail: email };
@@ -162,6 +161,13 @@ async function run() {
       res.send(result);
     });
 
+    app.delete("/selectedclass/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await seletcetedClassCollection.deleteOne({
+        _id: new ObjectId(id),
+      });
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
