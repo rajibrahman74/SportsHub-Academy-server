@@ -87,7 +87,6 @@ async function run() {
       res.send(result);
     });
 
-    
     // make admin porcess
     app.get("/users/admin/:email", verifyJWT, async (req, res) => {
       const email = req.params.email;
@@ -137,6 +136,17 @@ async function run() {
       const result = await usersCollection.updateOne(filter, updateDoc);
       res.send(result);
     });
+
+
+
+    // add classes process for instructor add the new classes
+    app.post("/addclasses", async (req, res) => {
+      const item = req.body;
+      const result = await allDataCollection.insertOne(item);
+      res.send(result);
+    });
+
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
