@@ -174,13 +174,17 @@ async function run() {
     });
 
     // enrolled class
+    // app.get("/enrolled-class", async (req, res) => {
+    //   const result = await paymentsCollection.find().toArray();
+    //   res.send(result);
+    // });
     app.get("/enrolled-class", async (req, res) => {
-      const result = await paymentsCollection.find().toArray();
+      const result = await paymentsCollection.find().sort({ transectionId: -1 }).toArray();
       res.send(result);
-    });
+  });
 
 
-    
+
     // admin approved patch opeeration
     app.patch("/alldata/:status", async (req, res) => {
       const status = req.params.status;
