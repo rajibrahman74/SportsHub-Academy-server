@@ -173,6 +173,14 @@ async function run() {
       res.send(result);
     });
 
+    // enrolled class
+    app.get("/enrolled-class", async (req, res) => {
+      const result = await paymentsCollection.find().toArray();
+      res.send(result);
+    });
+
+
+    
     // admin approved patch opeeration
     app.patch("/alldata/:status", async (req, res) => {
       const status = req.params.status;
