@@ -143,7 +143,7 @@ async function run() {
     });
 
     // add classes process for instructor add the new classes
-    app.post("/addclasses", async (req, res) => {
+    app.post("/alldata", async (req, res) => {
       const item = req.body;
       const result = await allDataCollection.insertOne(item);
       res.send(result);
@@ -234,7 +234,23 @@ async function run() {
       res.send(result);
     });
 
-    
+    // get my clases data from database
+    app.get("/addclasses", verifyJWT, async (req, res) => {
+      const email = req.query.email;
+      const query = { instructor_email: email };
+
+      if (!email) {
+        res.send([]);
+      }
+      const decodedEmail = req.decoded.email;
+      if (email !== decodedEmail) {
+        return res
+          .status(403)
+          .send({ error: true, message: "Forbidden Access" });
+      }
+      const result = await allDataCollection.find(query).toArray();
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
