@@ -179,11 +179,12 @@ async function run() {
     //   res.send(result);
     // });
     app.get("/enrolled-class", async (req, res) => {
-      const result = await paymentsCollection.find().sort({ transectionId: -1 }).toArray();
+      const result = await paymentsCollection
+        .find()
+        .sort({ transectionId: -1 })
+        .toArray();
       res.send(result);
-  });
-
-
+    });
 
     // admin approved patch opeeration
     app.patch("/alldata/:status", async (req, res) => {
